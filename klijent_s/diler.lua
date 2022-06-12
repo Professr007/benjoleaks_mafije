@@ -90,7 +90,7 @@ ESX.TriggerServerCallback('vuleprodaja:getItemAmount', function(quantity)
 			end)
 		else
 			blip = false
-			exports['republika_notifikacije']:Alert("", "Nemas dovoljno heroina", 2500, 'error')
+			exports['okokNotify']:Alert("", "Nemas dovoljno heroina", 2500, 'error')
 		end
 	end, 'heroin')
 end)
