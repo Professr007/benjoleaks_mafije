@@ -140,7 +140,6 @@ function openBossMenu(j, l)
                     }
                 )
             else
-                --SendTextMessage(Config.Text["cant_access_bossmenu"])
                 exports['okokNotify']:Alert("Direktorske radnje", "Nemate pristup ovom artiklu", 5000, 'info')
             end
         end,j)
@@ -199,13 +198,6 @@ RegisterNUICallback("addjob",function(data)
 
 RegisterNUICallback("changejob",function(data)
         TriggerServerEvent("core_jobutilities:changeJob", data["job"], data["grade"])
-    end)
-
-
-RegisterNetEvent("core_jobutilities:sendMessage")
-AddEventHandler("core_jobutilities:sendMessage",
-    function(msg)
-        SendTextMessage(msg)
     end)
 
 function DrawText3D(x, y, z, text)
