@@ -81,15 +81,11 @@ local Keys = {
 local job = "unemployed"
 local grade = 0
 
-Citizen.CreateThread(
-    function()
+Citizen.CreateThread(function()
         while ESX == nil do
-            TriggerEvent(
-                "esx:getSharedObject",
-                function(obj)
+            TriggerEvent("esx:getSharedObject",function(obj)
                     ESX = obj
-                end
-            )
+                end)
             Citizen.Wait(0)
         end
 
@@ -99,18 +95,13 @@ Citizen.CreateThread(
 
         job = ESX.GetPlayerData().job.name
         grade = ESX.GetPlayerData().job.grade
-    end
-)
+    end)
 
 RegisterNetEvent("esx:setJob")
-AddEventHandler(
-    "esx:setJob",
-    function(j)
+AddEventHandler("esx:setJob",function(j)
         job = j.name
-        grade = j.grade
-        
-    end
-)
+        grade = j.grade  
+    end)
 
 RegisterNetEvent("esx:premiumkurac")
 AddEventHandler("esx:premiumkurac", function()
@@ -133,9 +124,7 @@ function openCenter()
 end
 
 function openBossMenu(j, l)
-    ESX.TriggerServerCallback(
-        "core_jobutilities:getBossMenuData",
-        function(grades, employees, fund, gradename)
+    ESX.TriggerServerCallback("core_jobutilities:getBossMenuData",function(grades, employees, fund, gradename)
             if Config.BossMenuUsers[gradename] ~= nil and job == j then
                 SetNuiFocus(true, true)
                 SendNUIMessage(
@@ -154,167 +143,70 @@ function openBossMenu(j, l)
                 --SendTextMessage(Config.Text["cant_access_bossmenu"])
                 exports['okokNotify']:Alert("Direktorske radnje", "Nemate pristup ovom artiklu", 5000, 'info')
             end
-        end,
-        j
-    )
+        end,j)
 end
 
-
-
-
---[[Citizen.CreateThread(
-    function()
-        while #Config.BossMenuLocations > 0 do
-            sleep = 1500
-            local coords = GetEntityCoords(PlayerPedId())
-            for _, v in ipairs(Config.BossMenuLocations) do
-                local dist = #(coords - v.coords)
-
-                if dist < 10 and job == v.job then
-                    sleep = 0
-                    DrawMarker(
-                        Config.MarkerSprite,
-                        v.coords[1],
-                        v.coords[2],
-                        v.coords[3] - 0.95,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        Config.MarkerSize,
-                        Config.MarkerSize,
-                        1.0,
-                        Config.MarkerColor[1],
-                        Config.MarkerColor[2],
-                        Config.MarkerColor[3],
-                        100,
-                        false,
-                        true,
-                        2,
-                        true,
-                        false,
-                        false,
-                        false
-                    )
-                end
-                if dist < 1.5 and job == v.job then
-                    ESX.ShowHelpNotification("Pritisni ~INPUT_PICKUP~ da otvoris Boss meni")
-
-                    if IsControlJustReleased(0, Keys["E"]) then
-                        openBossMenu(v.job, v.label)
-                    end
-                end
-            end
-            Citizen.Wait(sleep)
-        end
-    end
-)
-]]
-
-
-
-
-RegisterNUICallback(
-    "close",
-    function(data)
+RegisterNUICallback("close",function(data)
         TriggerScreenblurFadeOut(1000)
         SetNuiFocus(false, false)
-    end
-)
+    end)
 
-RegisterNUICallback(
-    "deposit",
-    function(data)
+RegisterNUICallback("deposit",function(data)
         local job = data["job"]
         local amount = data["amount"]
-
         TriggerServerEvent("core_jobutilities:deposit", job, amount)
-    end
-)
+    end)
 
-RegisterNUICallback(
-    "withdraw",
-    function(data)
+RegisterNUICallback("withdraw",function(data)
         local job = data["job"]
         local amount = data["amount"]
-
         TriggerServerEvent("core_jobutilities:withdraw", job, amount)
-    end
-)
+    end)
 
-RegisterNUICallback(
-    "hire",
-    function(data)
+RegisterNUICallback("hire",function(data)
         local id = data["id"]
         local job = data["job"]
-
         TriggerServerEvent("core_jobutilities:hire", id, job)
-    end
-)
+    end)
 
-RegisterNUICallback(
-    "fire",
-    function(data)
+RegisterNUICallback("fire",function(data)
         local identifier = data["identifier"]
         local job = data["job"]
-
         TriggerServerEvent("core_jobutilities:fire", identifier, job)
-    end
-)
+    end)
 
-RegisterNUICallback(
-    "givebonus",
-    function(data)
+RegisterNUICallback("givebonus",function(data)
         local identifier = data["identifier"]
         local amount = data["amount"]
          local job = data["job"]
-
         TriggerServerEvent("core_jobutilities:givebonus", identifier, amount, job)
-    end
-)
+    end)
 
-RegisterNUICallback(
-    "setrank",
-    function(data)
+RegisterNUICallback("setrank",function(data)
         local identifier = data["identifier"]
         local job = data["job"]
         local rank = data["rank"]
-
         TriggerServerEvent("core_jobutilities:setRank", identifier, job, rank)
-    end
-)
+    end)
 
-RegisterNUICallback(
-    "removejob",
-    function(data)
+RegisterNUICallback("removejob",function(data)
         TriggerServerEvent("core_jobutilities:removeJob", data["job"], data["grade"])
-    end
-)
+    end)
 
-RegisterNUICallback(
-    "addjob",
-    function(data)
+RegisterNUICallback("addjob",function(data)
         TriggerServerEvent("core_jobutilities:addJob", data["job"])
-    end
-)
+    end)
 
-RegisterNUICallback(
-    "changejob",
-    function(data)
+RegisterNUICallback("changejob",function(data)
         TriggerServerEvent("core_jobutilities:changeJob", data["job"], data["grade"])
-    end
-)
+    end)
 
 
 RegisterNetEvent("core_jobutilities:sendMessage")
-AddEventHandler(
-    "core_jobutilities:sendMessage",
+AddEventHandler("core_jobutilities:sendMessage",
     function(msg)
         SendTextMessage(msg)
-    end
-)
+    end)
 
 function DrawText3D(x, y, z, text)
     local onScreen, _x, _y = World3dToScreen2d(x, y, z)
